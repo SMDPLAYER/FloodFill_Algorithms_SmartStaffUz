@@ -107,15 +107,4 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/generate_noise_button" />
-
-    <ProgressBar
-        android:id="@+id/vProgress"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-    />
 </androidx.constraintlayout.widget.ConstraintLayout>
