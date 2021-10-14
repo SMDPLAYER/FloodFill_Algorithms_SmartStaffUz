@@ -37,7 +37,12 @@ class FloodFillModel {
         image!!.getPixels(pixels, 0, width, 1, 1, width - 1, height - 1)
     }
 
-    private fun basicNonRecursiveFloodFill(x: Int, y: Int, targetColor: Int, replacementColor: Int) {
+    private fun basicNonRecursiveFloodFill(
+        x: Int,
+        y: Int,
+        targetColor: Int,
+        replacementColor: Int
+    ) {
         setTargetColor(targetColor)
         fillColor = replacementColor
 
@@ -104,11 +109,13 @@ class FloodFillModel {
 
             for (i in range.startX..range.endX) {
                 if (range.Y > 0 && !pixelsChecked[upPxIdx]
-                        && checkPixel(upPxIdx))
+                    && checkPixel(upPxIdx)
+                )
                     linearFill(i, upY)
 
                 if (range.Y < height - 1 && !pixelsChecked[downPxIdx]
-                        && checkPixel(downPxIdx))
+                    && checkPixel(downPxIdx)
+                )
                     linearFill(i, downY)
 
                 downPxIdx++

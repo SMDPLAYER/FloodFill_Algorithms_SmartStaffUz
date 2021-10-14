@@ -23,8 +23,8 @@ class MainViewModel : ViewModel() {
 
     private var model = FloodFillModel()
 
-    val executedBitmap=MutableLiveData<Pair<Bitmap,ImageView>>()
-    val randomBitmaps=MutableLiveData<Array<Bitmap>>()
+    val executedBitmap = MutableLiveData<Pair<Bitmap, ImageView>>()
+    val randomBitmaps = MutableLiveData<Array<Bitmap>>()
 
     fun executeFloodFilling(method: Int, view: ImageView, event: MotionEvent) {
         blockTry {
@@ -62,7 +62,7 @@ class MainViewModel : ViewModel() {
                 Log.i("TTT", "executeFloodFilling: exception occurred -> $e")
                 bitmap = Bitmap.createBitmap(64, 64, Bitmap.Config.RGB_565)
             }
-            executedBitmap.postValue( Pair(bitmap!!,view))
+            executedBitmap.postValue(Pair(bitmap!!, view))
         }
     }
 
@@ -94,18 +94,16 @@ class MainViewModel : ViewModel() {
     private fun ClosedRange<Int>.random() = Random().nextInt((endInclusive + 1) - start) + start
 
 
-
-    private fun blockTry(block:suspend()->Unit){
+    private fun blockTry(block: suspend () -> Unit) {
         viewModelScope.launch(Dispatchers.Default) {
             try {
                 block.invoke()
-            }catch (e: Exception){
-                Log.e("TTT",e.toString())
-            }catch (e:StackOverflowError){
-                Log.e("TTT",e.toString())
-            }
-            catch (e:OutOfMemoryError){
-                Log.e("TTT",e.toString())
+            } catch (e: Exception) {
+                Log.e("TTT", e.toString())
+            } catch (e: StackOverflowError) {
+                Log.e("TTT", e.toString())
+            } catch (e: OutOfMemoryError) {
+                Log.e("TTT", e.toString())
             }
         }
     }

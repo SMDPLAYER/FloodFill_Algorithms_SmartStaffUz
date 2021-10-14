@@ -12,12 +12,12 @@ import uz.smd.floodfillalgorithmssmartstaffuz.ui.main.MainScreen
  * Created by Siddikov Mukhriddin on 10/14/21
  */
 class MainActivity : AppCompatActivity() {
-    var binding: MainActivityBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = MainActivityBinding.inflate(layoutInflater)
-        setContentView(binding!!.root)
+        val binding = MainActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container, MainScreen())

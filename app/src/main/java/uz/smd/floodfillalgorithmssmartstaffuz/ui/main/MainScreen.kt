@@ -33,7 +33,7 @@ class MainScreen : Fragment(R.layout.screen_main) {
         super.onViewCreated(view, savedInstanceState)
         createDialog()
         if (savedInstanceState == null)
-        setAlgorithmImage(sizes)
+            setAlgorithmImage(sizes)
         handleClicks()
         createSpinnerItemsListeners()
         createSeekBarValueListener()
@@ -41,35 +41,39 @@ class MainScreen : Fragment(R.layout.screen_main) {
     }
 
     @SuppressLint("FragmentLiveDataObserve")
-    fun handleData(){
-        viewModel.executedBitmap.observe(this,{
+    fun handleData() {
+        viewModel.executedBitmap.observe(this, {
             showResult(it.first, it.second)
         })
 
-        viewModel.randomBitmaps.observe(this,{
+        viewModel.randomBitmaps.observe(this, {
             showResults(it)
-            handleLoad.value=false
+            handleLoad.value = false
         })
     }
 
-    fun handleClicks(){
+    fun handleClicks() {
         binding.apply {
-            generateNoiseButton.setOnClickListener{ setAlgorithmImage(sizes) }
-            firstAlgorithmImage.setOnTouchListener (::firstAlgorithmImageTouch)
-            secondAlgorithmImage.setOnTouchListener (::secondAlgorithmImageTouch)
-            sizeButton.setOnClickListener{ dialog?.show()}
+            generateNoiseButton.setOnClickListener { setAlgorithmImage(sizes) }
+            firstAlgorithmImage.setOnTouchListener(::firstAlgorithmImageTouch)
+            secondAlgorithmImage.setOnTouchListener(::secondAlgorithmImageTouch)
+            sizeButton.setOnClickListener { dialog?.show() }
         }
     }
 
-    fun firstAlgorithmImageTouch(view:View,event: MotionEvent):Boolean{
-        if ((view as ImageView).drawable != null && event.action==MotionEvent.ACTION_DOWN)
+    fun firstAlgorithmImageTouch(view: View, event: MotionEvent): Boolean {
+        if ((view as ImageView).drawable != null && event.action == MotionEvent.ACTION_DOWN)
             viewModel.executeFloodFilling(firstFloodFillMethod, binding.firstAlgorithmImage, event)
-       return true
+        return true
     }
 
-    fun secondAlgorithmImageTouch(view:View,event: MotionEvent):Boolean{
-        if ((view as ImageView).drawable != null && event.action==MotionEvent.ACTION_DOWN)
-            viewModel.executeFloodFilling(secondFloodFillMethod, binding.secondAlgorithmImage, event)
+    fun secondAlgorithmImageTouch(view: View, event: MotionEvent): Boolean {
+        if ((view as ImageView).drawable != null && event.action == MotionEvent.ACTION_DOWN)
+            viewModel.executeFloodFilling(
+                secondFloodFillMethod,
+                binding.secondAlgorithmImage,
+                event
+            )
         return true
     }
 
@@ -77,26 +81,26 @@ class MainScreen : Fragment(R.layout.screen_main) {
         val emptyBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config)
         if (bitmap.sameAs(emptyBitmap)) return
 
-        view.setBitmapAnim(bitmap,(100-floodFillSpeed*1L))
+        view.setBitmapAnim(bitmap, (100 - floodFillSpeed * 1L))
     }
 
-    fun setAlgorithmImage(point:Point){
-        handleLoad.value=true
+    fun setAlgorithmImage(point: Point) {
+        handleLoad.value = true
         binding.firstAlgorithmImage.setImageDrawable(null)
         binding.secondAlgorithmImage.setImageDrawable(null)
 
-       viewModel.generateRandomBitmaps(point.x, point.y)
+        viewModel.generateRandomBitmaps(point.x, point.y)
 
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        dialog=null
+        dialog = null
     }
 
-    var dialog:AlertDialog?=null
+    var dialog: AlertDialog? = null
 
-    fun createDialog(){
+    fun createDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_size, null)
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialog = dialogBuilder.create()
@@ -118,9 +122,9 @@ class MainScreen : Fragment(R.layout.screen_main) {
         }
 
         okButton.setOnClickListener {
-            sizes.x = if (width.text.toString().isNullOrEmpty())  sizes.x
+            sizes.x = if (width.text.toString().isNullOrEmpty()) sizes.x
             else width.text.toString().toInt()
-            sizes.y = if (height.text.toString().isNullOrEmpty())  sizes.y
+            sizes.y = if (height.text.toString().isNullOrEmpty()) sizes.y
             else height.text.toString().toInt()
 
             width.hint = width.text
@@ -133,33 +137,40 @@ class MainScreen : Fragment(R.layout.screen_main) {
 
 
     private fun createSpinnerItemsListeners() {
-        val adapter = ArrayAdapter.createFromResource(requireContext(),
-            R.array.algorithms_array, android.R.layout.simple_spinner_item)
+        val adapter = ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.algorithms_array, android.R.layout.simple_spinner_item
+        )
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         binding.firstAlgorithmSpinner.adapter = adapter
         binding.secondAlgorithmSpinner.adapter = adapter
 
 
-        binding.firstAlgorithmSpinner.onItemSelectedListener=object:AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                firstFloodFillMethod = p2
+        binding.firstAlgorithmSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    firstFloodFillMethod = p2
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
             }
-            override fun onNothingSelected(p0: AdapterView<*>?) {}
-        }
-        binding.secondAlgorithmSpinner.onItemSelectedListener=object:AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                secondFloodFillMethod = p2
+        binding.secondAlgorithmSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    secondFloodFillMethod = p2
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {}
             }
-            override fun onNothingSelected(p0: AdapterView<*>?) {}
-        }
     }
 
     private fun createSeekBarValueListener() {
-        binding.speedSeekbar.setOnSeekBarChangeListener(object:SeekBar.OnSeekBarChangeListener{
+        binding.speedSeekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
                 floodFillSpeed = p1
             }
+
             override fun onStartTrackingTouch(p0: SeekBar?) {}
             override fun onStopTrackingTouch(p0: SeekBar?) {}
         })

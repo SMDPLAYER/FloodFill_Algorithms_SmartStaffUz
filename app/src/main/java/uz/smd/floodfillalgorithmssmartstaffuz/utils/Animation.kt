@@ -12,11 +12,11 @@ import android.widget.ImageView
 /**
  * Created by Siddikov Mukhriddin on 10/14/21
  */
-fun ImageView.setBitmapAnim( new_image: Bitmap?,anim_duration:Long) {
+fun ImageView.setBitmapAnim(new_image: Bitmap?, anim_duration: Long) {
     val anim_out: Animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_out)
-    val anim_in: Animation = AnimationUtils.loadAnimation(context,android.R.anim.fade_in)
-    anim_out.duration=anim_duration
-    anim_in.duration=anim_duration
+    val anim_in: Animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in)
+    anim_out.duration = anim_duration
+    anim_in.duration = anim_duration
     anim_out.setAnimationListener(object : AnimationListener {
         override fun onAnimationStart(animation: Animation?) {}
         override fun onAnimationRepeat(animation: Animation?) {}
