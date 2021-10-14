@@ -6,60 +6,71 @@ import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 import android.view.MotionEvent
 import android.widget.ImageView
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import uz.smd.floodfillalgorithmssmartstaffuz.model.FloodFillModel
+import java.lang.Exception
 import java.util.*
 
 class MainViewModel : ViewModel() {
 
     private var model = FloodFillModel()
 
-    fun executeFloodFilling(method: Int, view: ImageView, event: MotionEvent): Bitmap {
+    val executedBitmap=MutableLiveData<Pair<Bitmap,ImageView>>()
+    val randomBitmaps=MutableLiveData<Array<Bitmap>>()
 
-        val viewCoords = IntArray(2)
-        view.getLocationOnScreen(viewCoords)
+    fun executeFloodFilling(method: Int, view: ImageView, event: MotionEvent) {
+        blockTry {
+            val viewCoords = IntArray(2)
+            view.getLocationOnScreen(viewCoords)
 
-        val absX = event.rawX
-        val absY = event.rawY
+            val absX = event.rawX
+            val absY = event.rawY
 
-        val imgX = absX - viewCoords[0]
-        val imgY = absY - viewCoords[1]
+            val imgX = absX - viewCoords[0]
+            val imgY = absY - viewCoords[1]
 
-        val maxImgX = view.width
-        val maxImgY = view.height
+            val maxImgX = view.width
+            val maxImgY = view.height
 
-        var bitmap: Bitmap?
-        try {
-            bitmap = (view.drawable as BitmapDrawable).bitmap
-        } catch (e: kotlin.TypeCastException) {
-            e.printStackTrace()
-            Log.i(TAG, "executeFloodFilling: exception occurred -> $e")
-            bitmap = Bitmap.createBitmap(64, 64, Bitmap.Config.RGB_565)
-            return bitmap
+            var bitmap: Bitmap?
+            try {
+                bitmap = (view.drawable as BitmapDrawable).bitmap
+
+                val maxX = bitmap.width
+                val maxY = bitmap.height
+
+                val x = (maxX * imgX / maxImgX.toFloat()).toInt()
+                val y = (maxY * imgY / maxImgY.toFloat()).toInt()
+
+                val color = bitmap.getPixel(x, y)
+                val isBlack = color == Color.BLACK
+
+                val replacementColor = if (isBlack) Color.WHITE else Color.BLACK
+
+                model.useImage(bitmap)
+                model.floodFill(method, x, y, color, replacementColor)
+            } catch (e: TypeCastException) {
+                e.printStackTrace()
+                Log.i("TTT", "executeFloodFilling: exception occurred -> $e")
+                bitmap = Bitmap.createBitmap(64, 64, Bitmap.Config.RGB_565)
+            }
+            executedBitmap.postValue( Pair(bitmap!!,view))
         }
-
-        val maxX = bitmap.width
-        val maxY = bitmap.height
-
-        val x = (maxX * imgX / maxImgX.toFloat()).toInt()
-        val y = (maxY * imgY / maxImgY.toFloat()).toInt()
-
-        val color = bitmap.getPixel(x, y)
-        val isBlack = color == Color.BLACK
-
-        val replacementColor = if (isBlack) Color.WHITE else Color.BLACK
-
-        model.useImage(bitmap)
-        model.floodFill(method, x, y, color, replacementColor)
-
-        return bitmap
-
     }
 
-    fun generateRandomBitmaps(x: Int, y: Int): Array<Bitmap> {
-        val bmp1 = generateRandomBitmap(x, y)
-        val bmp2 = generateRandomBitmap(x, y)
-        return arrayOf(bmp1, bmp2)
+    fun generateRandomBitmaps(x: Int, y: Int) {
+        job?.cancel()
+        blockTry {
+
+            val bmp1 = generateRandomBitmap(x, y)
+            val bmp2 = generateRandomBitmap(x, y)
+            randomBitmaps.postValue(arrayOf(bmp1, bmp2))
+        }
     }
 
     private fun generateRandomBitmap(width: Int, height: Int): Bitmap {
@@ -80,8 +91,22 @@ class MainViewModel : ViewModel() {
 
     private fun ClosedRange<Int>.random() = Random().nextInt((endInclusive + 1) - start) + start
 
-    companion object {
-        private const val TAG = "FloodFillVModel"
+
+
+    var job: Job?=null
+    private fun blockTry(block:suspend()->Unit){
+       job= viewModelScope.launch(Dispatchers.Default) {
+            try {
+                block.invoke()
+            }catch (e: Exception){
+                Log.e("TTT",e.toString())
+            }catch (e:StackOverflowError){
+                Log.e("TTT",e.toString())
+            }
+            catch (e:OutOfMemoryError){
+                Log.e("TTT",e.toString())
+            }
+        }
     }
 
 }

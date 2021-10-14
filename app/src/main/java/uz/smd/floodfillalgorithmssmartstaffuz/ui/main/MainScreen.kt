@@ -1,5 +1,6 @@
 package uz.smd.floodfillalgorithmssmartstaffuz.ui.main
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Point
 import android.os.Bundle
@@ -30,6 +31,19 @@ class MainScreen : Fragment(R.layout.screen_main) {
         handleClicks()
         createSpinnerItemsListeners()
         createSeekBarValueListener()
+        handleData()
+    }
+
+    @SuppressLint("FragmentLiveDataObserve")
+    fun handleData(){
+        viewModel.executedBitmap.observe(this,{
+            showResult(it.first, it.second)
+        })
+
+        viewModel.randomBitmaps.observe(this,{
+            showResults(it)
+            handleLoad.value=false
+        })
     }
 
     fun handleClicks(){
@@ -42,20 +56,16 @@ class MainScreen : Fragment(R.layout.screen_main) {
     }
 
     fun firstAlgorithmImageTouch(view:View,event: MotionEvent):Boolean{
-        if ((view as ImageView).drawable != null)
-        if (event.action==MotionEvent.ACTION_DOWN){
-           val kss= viewModel.executeFloodFilling(firstFloodFillMethod, binding.firstAlgorithmImage, event)
-            showResult(kss, binding.firstAlgorithmImage)
-        }
+        if ((view as ImageView).drawable != null && event.action==MotionEvent.ACTION_DOWN)
+            viewModel.executeFloodFilling(firstFloodFillMethod, binding.firstAlgorithmImage, event)
+
        return true
     }
 
     fun secondAlgorithmImageTouch(view:View,event: MotionEvent):Boolean{
-        if ((view as ImageView).drawable != null)
-        if (event.action==MotionEvent.ACTION_DOWN){
-           val kss= viewModel.executeFloodFilling(secondFloodFillMethod, binding.secondAlgorithmImage, event)
-            showResult(kss, binding.secondAlgorithmImage)
-        }
+        if ((view as ImageView).drawable != null && event.action==MotionEvent.ACTION_DOWN)
+            viewModel.executeFloodFilling(secondFloodFillMethod, binding.secondAlgorithmImage, event)
+
         return true
     }
 
@@ -71,8 +81,8 @@ class MainScreen : Fragment(R.layout.screen_main) {
         binding.firstAlgorithmImage.setImageDrawable(null)
         binding.secondAlgorithmImage.setImageDrawable(null)
 
-        showResults(viewModel.generateRandomBitmaps(point.x, point.y))
-        handleLoad.value=false
+       viewModel.generateRandomBitmaps(point.x, point.y)
+
     }
 
 
