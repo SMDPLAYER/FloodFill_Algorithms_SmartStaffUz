@@ -15,7 +15,11 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import uz.smd.floodfillalgorithmssmartstaffuz.R
 import uz.smd.floodfillalgorithmssmartstaffuz.databinding.ScreenMainBinding
 import uz.smd.floodfillalgorithmssmartstaffuz.ui.MainActivity.Companion.handleLoad
+import uz.smd.floodfillalgorithmssmartstaffuz.utils.setBitmapAnim
 
+/**
+ * Created by Siddikov Mukhriddin on 10/14/21
+ */
 class MainScreen : Fragment(R.layout.screen_main) {
     private val viewModel: MainViewModel by viewModels()
     private val binding by viewBinding(ScreenMainBinding::bind)
@@ -28,6 +32,8 @@ class MainScreen : Fragment(R.layout.screen_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createDialog()
+        if (savedInstanceState == null)
+        setAlgorithmImage(sizes)
         handleClicks()
         createSpinnerItemsListeners()
         createSeekBarValueListener()
@@ -58,14 +64,12 @@ class MainScreen : Fragment(R.layout.screen_main) {
     fun firstAlgorithmImageTouch(view:View,event: MotionEvent):Boolean{
         if ((view as ImageView).drawable != null && event.action==MotionEvent.ACTION_DOWN)
             viewModel.executeFloodFilling(firstFloodFillMethod, binding.firstAlgorithmImage, event)
-
        return true
     }
 
     fun secondAlgorithmImageTouch(view:View,event: MotionEvent):Boolean{
         if ((view as ImageView).drawable != null && event.action==MotionEvent.ACTION_DOWN)
             viewModel.executeFloodFilling(secondFloodFillMethod, binding.secondAlgorithmImage, event)
-
         return true
     }
 
@@ -73,7 +77,7 @@ class MainScreen : Fragment(R.layout.screen_main) {
         val emptyBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, bitmap.config)
         if (bitmap.sameAs(emptyBitmap)) return
 
-        view.setImageBitmap(bitmap)
+        view.setBitmapAnim(bitmap,(100-floodFillSpeed*1L))
     }
 
     fun setAlgorithmImage(point:Point){
@@ -85,6 +89,10 @@ class MainScreen : Fragment(R.layout.screen_main) {
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        dialog=null
+    }
 
     var dialog:AlertDialog?=null
 

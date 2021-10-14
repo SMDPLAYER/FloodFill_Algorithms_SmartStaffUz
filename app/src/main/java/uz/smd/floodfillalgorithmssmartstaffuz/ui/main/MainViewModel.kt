@@ -16,6 +16,9 @@ import uz.smd.floodfillalgorithmssmartstaffuz.model.FloodFillModel
 import java.lang.Exception
 import java.util.*
 
+/**
+ * Created by Siddikov Mukhriddin on 10/14/21
+ */
 class MainViewModel : ViewModel() {
 
     private var model = FloodFillModel()
@@ -64,7 +67,6 @@ class MainViewModel : ViewModel() {
     }
 
     fun generateRandomBitmaps(x: Int, y: Int) {
-        job?.cancel()
         blockTry {
 
             val bmp1 = generateRandomBitmap(x, y)
@@ -93,9 +95,8 @@ class MainViewModel : ViewModel() {
 
 
 
-    var job: Job?=null
     private fun blockTry(block:suspend()->Unit){
-       job= viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.Default) {
             try {
                 block.invoke()
             }catch (e: Exception){

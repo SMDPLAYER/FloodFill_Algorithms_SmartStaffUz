@@ -5,6 +5,9 @@ import android.graphics.Color
 import android.graphics.Point
 import java.util.*
 
+/**
+ * Created by Siddikov Mukhriddin on 10/14/21
+ */
 class FloodFillModel {
 
     private var width = 0

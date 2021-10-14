@@ -8,6 +8,9 @@ import uz.smd.floodfillalgorithmssmartstaffuz.R
 import uz.smd.floodfillalgorithmssmartstaffuz.databinding.MainActivityBinding
 import uz.smd.floodfillalgorithmssmartstaffuz.ui.main.MainScreen
 
+/**
+ * Created by Siddikov Mukhriddin on 10/14/21
+ */
 class MainActivity : AppCompatActivity() {
     var binding: MainActivityBinding? = null
 

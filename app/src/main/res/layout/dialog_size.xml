@@ -36,7 +36,7 @@
             android:layout_marginTop="16dp"
             android:layout_weight="1"
             android:ems="10"
-            android:maxLength="4"
+            android:maxLength="2"
             android:hint="64"
             android:inputType="number"
             android:textAlignment="center"
@@ -59,7 +59,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <EditText
-            android:maxLength="4"
+            android:maxLength="2"
             android:id="@+id/edit_width"
             android:layout_width="50dp"
             android:layout_height="42dp"

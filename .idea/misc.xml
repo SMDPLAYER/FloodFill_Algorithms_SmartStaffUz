@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable/ic_control.xml" value="0.22962962962962963" />
+        <entry key="app/src/main/res/layout-land/activity_main.xml" value="0.21825396825396826" />
         <entry key="app/src/main/res/layout/dialog_size.xml" value="0.1" />
         <entry key="app/src/main/res/layout/main_activity.xml" value="0.10106823357532355" />
         <entry key="app/src/main/res/layout/main_fragment.xml" value="0.24375" />
