@@ -13,6 +13,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import by.kirich1409.viewbindingdelegate.viewBinding
 import uz.smd.floodfillalgorithmssmartstaffuz.R
+import uz.smd.floodfillalgorithmssmartstaffuz.databinding.DialogSizeBinding
 import uz.smd.floodfillalgorithmssmartstaffuz.databinding.ScreenMainBinding
 import uz.smd.floodfillalgorithmssmartstaffuz.ui.MainActivity.Companion.handleLoad
 import uz.smd.floodfillalgorithmssmartstaffuz.utils.setBitmapAnim
@@ -101,16 +102,16 @@ class MainScreen : Fragment(R.layout.screen_main) {
     var dialog: AlertDialog? = null
 
     fun createDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_size, null)
+       val dialogView= DialogSizeBinding.inflate(layoutInflater)
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialog = dialogBuilder.create()
-        dialog?.setView(dialogView)
+        dialog?.setView(dialogView.root)
 
-        val cancelButton = dialogView.findViewById<Button>(R.id.cancel_button)
-        val okButton = dialogView.findViewById<Button>(R.id.ok_button)
+        val cancelButton = dialogView.cancelButton
+        val okButton = dialogView.okButton
 
-        val width = dialogView.findViewById<EditText>(R.id.edit_width)
-        val height = dialogView.findViewById<EditText>(R.id.edit_height)
+        val width = dialogView.editWidth
+        val height = dialogView.editHeight
 
         okButton.isEnabled = false
 
