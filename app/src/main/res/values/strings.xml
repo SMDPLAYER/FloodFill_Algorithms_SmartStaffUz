@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FloodFill Algorithms SmartStaffUz</string>
+    <string-array name="algorithms_array">
+        <item>Basic NonRecursive FloodFill</item>
+        <item>Queue Linear FloodFill</item>
+        <item>Basic Recursive FloodFill</item>
+    </string-array>
+</resources>
